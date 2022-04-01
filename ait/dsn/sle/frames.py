@@ -509,7 +509,7 @@ class AOSTransFrame(BaseTransferFrame):
                 'Skipping further processing of this AOS transfer frame data field...'
             )
             ait.core.log.info(err)
-            ait.core.log.error(f"AOTS Faulty Packet=> {datafield}")
+            ait.core.log.error(f"AOS Faulty Packet=> {bytes(datafield).hex()}")
             pass
         elif vc_df_type == AOSDataFieldType.M_PDU:
             self.decode_dataField_MPDU(datafield)
