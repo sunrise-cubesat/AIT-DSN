@@ -402,6 +402,7 @@ class CLTU(common.SLE):
     def _bind_return_handler(self, pdu):
         ''''''
         result = pdu['cltuBindReturn']['result']
+        ait.core.log.info(f"Result: {result}")
         responder_identifier = pdu['cltuBindReturn']['responderIdentifier']
 
         # Check that responder_id in the response matches what we know

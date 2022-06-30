@@ -9,7 +9,7 @@ class SLE_Manager_Plugin(Plugin):
     def __init__(self, inputs=None, outputs=None,
                  zmq_args=None, report_time_s=0, **kwargs):
         super().__init__(inputs, outputs, zmq_args)
-        self.restart_delay_s = 5
+        self.restart_delay_s = 30
         self.SLE_manager = None
         self.supervisor = Greenlet.spawn(self.supervisor_tree)
         self.report_time_s = report_time_s
@@ -54,10 +54,11 @@ class SLE_Manager_Plugin(Plugin):
             self.connect()
             while True:
                 time.sleep(restart_delay_s)
-                if self.SLE_manager._state == 'active':
+                if self.SLE_manager._state == 'active' or self.SLE_manager._state == 'ready':
                     log.debug(f"SLE OK!")
                 else:
-                    self.publish("RAF SLE Interface is not active!",'monitor_high_priority_cltu')
+                    #self.publish("RAF SLE Interface is not active!",'monitor_high_priority_cltu')
+                    high_priority("RAF SLE Interface is not active or ready!")
                     self.handle_restart()
 
         if msg:
@@ -93,6 +94,3 @@ class SLE_Manager_Plugin(Plugin):
             log.error(f"Encountered exception {e}.")
             self.handle_restart()
 
-        finally:
-            self.handle_kill()
-            self.handle_restart()
