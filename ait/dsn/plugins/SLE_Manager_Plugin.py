@@ -5,10 +5,10 @@ import ait.dsn.sle
 from ait.core.server.plugins import Plugin
 from ait.core.message_types import MessageType
 from ait.core import log
-import ait.dsn.plugins.Graffiti as Graffiti
 import ait
 from ait.dsn.sle import RAF
 
+import datetime as dt
 
 """
 A plugin which creates an RAF connection with the DSN.
@@ -16,9 +16,9 @@ Frames received via the RAF connection are sent to the output stream
 """
 
 
-class SLE_Manager_Plugin(Plugin, Graffiti.Graphable):
+class SLE_Manager_Plugin(Plugin):
     def __init__(self, inputs=None, outputs=None,
-                 zmq_args=None, report_time_s=0, autorestart=True, **kwargs):
+                 zmq_args=None, report_time_s=0, autorestart=True, start=None, stop=None**kwargs):
         inputs = ['SLE_RAF_RESTART',
                   'SLE_RAF_STOP']
         super().__init__(inputs, outputs, zmq_args)
@@ -26,10 +26,16 @@ class SLE_Manager_Plugin(Plugin, Graffiti.Graphable):
         self.restart_delay_s = 5
         self.supervisor = Greenlet.spawn(self.supervisor_tree)
         self.report_time_s = report_time_s
-        Graffiti.Graphable.__init__(self)
         self.receive_counter = 0
         self.raf_object = None
         self.autorestart = autorestart
+
+        if start and stop:
+            self.start = dt.datetime.fromisoformat(start)
+            self.stop = dt.datetime.fromisoformat(stop)
+        else:
+            self.start = None
+            self.stop = None
 
     def connect(self):
         log.info("Starting SLE interface.")
@@ -42,7 +48,7 @@ class SLE_Manager_Plugin(Plugin, Graffiti.Graphable):
             self.raf_object.bind()
             time.sleep(5)
 
-            self.raf_object.start(None, None)
+            self.raf_object.start(self.start, self.stop)
             time.sleep(5)
 
             if self.raf_object._state == 'active':
@@ -117,17 +123,6 @@ class SLE_Manager_Plugin(Plugin, Graffiti.Graphable):
             log.info("Received RAF Stop Directive!")
             self.sle_stop()
             return
-
-    def graffiti(self):
-        n = Graffiti.Node(self.self_name,
-                          inputs=[(i, "AOS Telemetry Frame")
-                                  for i in self.inputs],
-                          outputs=[MessageType.RAF_DATA.to_tuple(),
-                                   MessageType.RAF_STATUS.to_tuple(),
-                                   MessageType.HIGH_PRIORITY_RAF_STATUS.to_tuple()],
-                          label=("Forwards AOS Frames from SLE interface"),
-                          node_type=Graffiti.Node_Type.PLUGIN)
-        return [n]
 
     def _transfer_data_invoc_handler(self, pdu):
         """"""
