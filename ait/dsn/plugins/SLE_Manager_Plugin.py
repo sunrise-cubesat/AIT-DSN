@@ -31,8 +31,8 @@ class SLE_Manager_Plugin(Plugin):
         self.autorestart = autorestart
 
         if start and stop:
-            self.start = dt.date.fromisoformat(start)
-            self.stop = dt.date.fromisoformat(stop)
+            self.start = dt.datetime.fromisoformat(start)
+            self.stop = dt.datetime.fromisoformat(stop)
         else:
             self.start = None
             self.stop = None
