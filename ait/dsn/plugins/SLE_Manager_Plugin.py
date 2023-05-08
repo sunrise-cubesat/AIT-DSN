@@ -18,7 +18,7 @@ Frames received via the RAF connection are sent to the output stream
 
 class SLE_Manager_Plugin(Plugin):
     def __init__(self, inputs=None, outputs=None,
-                 zmq_args=None, report_time_s=0, autorestart=True, start=None, stop=None**kwargs):
+                 zmq_args=None, report_time_s=0, autorestart=True, start=None, stop=None, **kwargs):
         inputs = ['SLE_RAF_RESTART',
                   'SLE_RAF_STOP']
         super().__init__(inputs, outputs, zmq_args)

@@ -39,9 +39,8 @@ setup(
 
     install_requires = [
         'greenlet==0.4.16',
-        'pyasn1',
-        'bitstring',
-        'graphviz',
+        'pyasn1==0.5.0',
+        'bitstring==4.0.2',
     ],
 
     extras_require = {
