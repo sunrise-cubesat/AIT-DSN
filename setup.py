@@ -26,7 +26,7 @@ with io.open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name = 'ait-dsn',
-    version = '3.0.0+snr',
+    version = '3.1.0+snr',
     description  = description,
     long_description = long_description,
     long_description_content_type = 'text/x-rst',
@@ -39,9 +39,8 @@ setup(
 
     install_requires = [
         'greenlet==0.4.16',
-        'pyasn1',
-        'bitstring',
-        'graphviz',
+        'pyasn1==0.5.0',
+        'bitstring==4.0.2',
     ],
 
     extras_require = {
