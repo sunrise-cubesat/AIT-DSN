@@ -206,7 +206,7 @@ class CLTU(common.SLE):
         '''
         pdu = self._prepare_cltu_pdu(tc_data, earliest_time, latest_time, delay, notify)
 
-        ait.core.log.info('Sending TC Data ...')
+        ait.core.log.debug('Sending TC Data ...')
         self.send(self.encode_pdu(pdu))
 
     def _prepare_cltu_pdu(self, tc_data, earliest_time=None, latest_time=None, delay=0, notify=False):
