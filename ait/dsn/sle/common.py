@@ -549,10 +549,6 @@ def conn_handler(handler):
 def data_processor(handler):
     ''' Handler for decoding ASN.1 encoded PDUs '''
     while True:
-        gevent.sleep(0)
-        if handler._data_queue.empty():
-            continue
-
         msg = handler._data_queue.get()
         hdr, body = msg[:8], msg[8:]
 
